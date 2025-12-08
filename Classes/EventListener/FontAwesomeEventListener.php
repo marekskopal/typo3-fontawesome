@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Page\Event\BeforeStylesheetsRenderingEvent;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Security\ContentSecurityPolicy\ConsumableNonce;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Directive;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 
 #[AsEventListener]
@@ -69,7 +70,7 @@ final readonly class FontAwesomeEventListener
     {
         /** @var ConsumableNonce|null $nonce */
         $nonce = $this->getRequest()->getAttribute('nonce');
-        return $nonce instanceof ConsumableNonce ? $nonce->consumeInline() : null;
+        return $nonce instanceof ConsumableNonce ? $nonce->consumeInline(Directive::ScriptSrcElem) : null;
     }
 
     /** @return array{"fontSrc.": array<int, string>}|null */
