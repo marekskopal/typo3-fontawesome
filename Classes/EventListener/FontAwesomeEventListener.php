@@ -37,10 +37,9 @@ final readonly class FontAwesomeEventListener
 
         $linkAttributes = [
             'id' => $id,
-            'rel' => 'stylesheet',
+            'rel' => 'preload',
             'href' => $fontSrc,
-            'media' => 'print',
-            'nonce' => $this->getCspNonce(),
+            'as' => 'style',
         ];
 
         $tag = '<link ' . $this->getTagAttributes($linkAttributes) . '>';
@@ -49,9 +48,9 @@ final readonly class FontAwesomeEventListener
             'nonce' => $this->getCspNonce(),
         ];
 
-        return $tag . '<script ' . $this->getTagAttributes(
-            $scriptAttributes,
-        ) . '>' . $id . '.addEventListener(\'load\', function(){this.media="all"})</script>';
+        $script = 'var ' . $id . '=document.getElementById(\'' . $id . '\');' . $id . '.onload=function(){' . $id . '.onload=null;' . $id . '.rel=\'stylesheet\'};if(performance.getEntriesByName(' . $id . '.href,\'resource\').length>0&&' . $id . '.rel!==\'stylesheet\'){' . $id . '.rel=\'stylesheet\'}';
+
+        return $tag . '<script ' . $this->getTagAttributes($scriptAttributes) . '>' . $script . '</script>';
     }
 
     /** @param array<string, string|null> $attributes */
